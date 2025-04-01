@@ -48,6 +48,9 @@ print("Starting DNA-only simulation setup...", flush=True)
 
 dna_seq = generate_actg_sequence(dna_length)
 dna = DNA('dna1', dna_seq)
+print("Starting relaxing single DNA strand...", flush=True)
+dna.relax()
+print("Relaxed single DNA strand..", flush=True)
 dna_topology = dna.topology
 dna_positions = dna.generate_initial_coords()
 print("Creating initial model with DNA at origin...", flush=True)

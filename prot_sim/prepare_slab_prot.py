@@ -1,8 +1,10 @@
-from OpenCGChromatin import IDP, get_system, PLATFORM, PROPERTIES
+from OpenCGChromatin_Ca import IDP, DNA, get_minimized_system, PLATFORM, PROPERTIES
 import numpy as np
 import math
-from openmm import unit, mm
+import openmm as mm
+import openmm.unit as unit
 from openmm import app
+
 
 # --------------- PARAMETERS -------------------
 # FUS protein
@@ -10,7 +12,7 @@ seq = ("MASNDYTQQATQSYGAYPTQPGQGYSQQSSQPYGQQSYSGYSQSTDTSGYGQSSYSSYGQSQNTGYGTQSTP
 chain_id = 'fus' # OpenMM topology chain name (4th coloumn in PDB file)
 min_separation = 1.0  # Minimum clearance (in nm) between any two objects (tweak as needed)
 Np = 100  # number of proteins
-desired_prot = Np  # add other proteins if it is a protein mix
+tot_prot = Np  # add other proteins if it is a protein mix
 grid_spacing = 15.0  # Define grid parameters for candidate positions (in nm)
 
 
@@ -59,13 +61,13 @@ safe_positions = np.random.shuffle(selected_positions)  # Shuffle positions to r
 print("Placing protein copies...", flush=True)
 model = app.Modeller(p_topology, p_positions * unit.nanometer)  # Start a modeller with the first protein copy
 
-for i in range(desired_prot):
+for i in range(tot_prot):
     candidate_offset = safe_positions[i]
     new_position = p_positions + candidate_offset         # Place protein by translating its relaxed coordinates by the candidate offset
     model.add(p_topology, new_position * unit.nanometer)
-print(f"Placed {desired_H1} H1 copies.", flush=True)
+print(f"Placed {tot_prot} protein copies.", flush=True)
 
-print(f"Total: Added {desired_prot} protein copies.", flush=True)
+print(f"Total: Added {tot_prot} protein copies.", flush=True)
 print('Total number of particles:', model.topology.getNumAtoms(), flush=True)
 app.PDBFile.writeFile(model.topology, model.positions, open('start_model.pdb', 'w'))
 
@@ -86,27 +88,34 @@ model.topology.setPeriodicBoxVectors(box_vecs)
 print("Periodic box set.", flush=True)
 
 # For protein-only simulation, create an empty dictionary for globular indices
-globular_indices_dict = {chain.id: [] for chain in model.topology.chains()}
+indeces_dict = {chain.id: [] for chain in model.topology.chains()}
+dyad_positions=[]   # no dyad positions
 debye = 0.8
 
-system = get_system(
-    model_positions,
-    model.topology,
-    globular_indices_dict,
-    dyad_positions=[],    # no dyad positions
-    debye_length = debye,
-    constrains = 'all',
-    qAA=1.,
-    qP=1.,
-    constraints='none',  # no nucleosome/DNA constraints
-    overall_LJ_eps_scaling=1.,
-    protein_DNA_LJ_eps_scaling=1.,
-    coul_rc= 2. + 2.0 * debye,
-    mechanics_k_coeff=1.0,
-    anchor_scaling=0.,
-    periodic=True,
-    CoMM_remover=True
-)
+# Function to create a system with a given Debye length
+def system_wrapper(debye, indeces_dict, dyad_positions):
+    return get_minimized_system(
+        model_positions,
+        model.topology,
+        indeces_dict,
+        dyad_positions,
+        debye_length=debye,
+        constraints='breathing',  # no nucleosome/DNA constraints , none ?
+        qTail=1.0,
+        qCore=1.0,
+        qP=1.0,
+        overall_LJ_eps_scaling=0.75,
+        coul_rc= 2. + 2.0 * debye,
+        mechanics_k_coeff=1.00,
+        anchor_scaling=0.,
+        kappa_factor=0.,
+        periodic=False,
+        CoMM_remover=True
+    )[0]
+
+system = system_wrapper(debye, indeces_dict, dyad_positions)
+
+
 print("System object created.", flush=True)
 
 # -----------------------------
