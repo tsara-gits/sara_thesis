@@ -18,7 +18,7 @@ dna_length = 100                 # number of nucleotides in one strand
 
 
 # --------- Protein parameters -----------
-# Note: model works only for fully IDP proteins
+# Note: the code setup works only for fully IDP proteins
 
 seq_FUS = ("MASNDYTQQATQSYGAYPTQPGQGYSQQSSQPYGQQSYSGYSQSTDTSGYGQSSYSSYGQSQNTGYGTQSTPQGYGSTGGYGSSQSSQSSYGQQSSYPGYGQQPAPSSTSGSYGSSSQSSSYGQPQSGSYSQQPSYGGQQQSYGQQQSYNPPQGYGQQNQYNS")
 chainID_FUS = 'fus'              # OpenMM topology chain ID name (4th coloumn in PDB file)
