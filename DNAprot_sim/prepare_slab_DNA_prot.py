@@ -55,7 +55,7 @@ sim_time_relax = 200             # simulation time of run 2: NVT with extended b
 # Helper functions
 # --------------------------------------
 
-# Create output directories save the initial pdb structures. Helpful for simulation setup checks.
+# Create an output directory to save the initial structures of the proteins and DNAs. Helpful for simulation setup checks.
 os.makedirs('OUTPUTS_pdbmodels', exist_ok=True)
 
 
