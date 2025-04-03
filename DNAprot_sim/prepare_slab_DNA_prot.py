@@ -167,7 +167,7 @@ for prot in proteins_list:
     # Save the pdb structure files
     pmodel = app.Modeller(prot.topology, prot.initial_coords * unit.nanometer)
     pmodel_relaxed = app.Modeller(prot.topology, prot.relaxed_coords * unit.nanometer)
-    app.PDBFile.writeFile(pmodel.topology, pmodel.positions, open(os.path.join(prot.chain_id + '_model.pdb'), 'w'))
+    app.PDBFile.writeFile(pmodel.topology, pmodel.positions, open(os.path.join('OUTPUTS_pdbmodels', prot.chain_id + '_model.pdb'), 'w'))
     app.PDBFile.writeFile(pmodel_relaxed.topology, pmodel_relaxed.positions, open(os.path.join('OUTPUTS_pdbmodels', prot.chain_id + '_relaxed_model.pdb'), 'w'))
 
 
