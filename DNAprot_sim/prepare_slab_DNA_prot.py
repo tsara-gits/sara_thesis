@@ -94,7 +94,7 @@ def calc_DNA_length(dna):
 
 print(f"Starting simulation setup with: \n - {Ndna} DNA strands", flush=True)
 for i in range(len(proteins_list)):
-    print(f" - {Np_list[i]} {proteins_list[i].chain_id} proteins\n")
+    print(f" - {Np_list[i]} {proteins_list[i].chain_id} proteins\n - {sim_temp} K temperature")
 print("Helper functions defined.", flush=True)
 
 
