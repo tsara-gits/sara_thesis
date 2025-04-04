@@ -298,7 +298,7 @@ barostat = mm.MonteCarloBarostat(0.5 * unit.atmosphere, sim_temp * unit.kelvin, 
 system.addForce(barostat)
 
 # Create the integrator and simulation
-integrator = mm.LangevinMiddleIntegrator(300 * unit.kelvin, 0.01 / unit.picosecond, 10 * unit.femtosecond)
+integrator = mm.LangevinMiddleIntegrator(sim_temp * unit.kelvin, 0.01 / unit.picosecond, 10 * unit.femtosecond)
 simulation = app.Simulation(model.topology, system, integrator, platform=PLATFORM, platformProperties=PROPERTIES)
 
 # Set positions and box vectors, then minimize energy
