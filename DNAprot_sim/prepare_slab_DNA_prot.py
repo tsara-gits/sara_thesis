@@ -47,7 +47,7 @@ DNA_spacing = 5.0                # grid spacing between DNA strand - DNA strand 
 # ------ Simluation time parameters -------
 sim_time_compress = 200          # simulation time of run 1: NPT with barostat to compress the box (ns)
 sim_time_relax = 200             # simulation time of run 2: NVT with extended box for relaxation (ns)
-
+sim_temp = 300                   # simulation temperature (K)
 
 
 
@@ -294,7 +294,7 @@ print(" - Simulation system is initialized.\n", flush=True)
 print("Starting simulation run 1: NPT with barostat to compress the box.", flush=True)
 
 # Add a barostat with external pressure of 0.5 atm
-barostat = mm.MonteCarloBarostat(0.5 * unit.atmosphere, 300 * unit.kelvin, 25)
+barostat = mm.MonteCarloBarostat(0.5 * unit.atmosphere, sim_temp * unit.kelvin, 25)
 system.addForce(barostat)
 
 # Create the integrator and simulation
